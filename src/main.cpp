@@ -10,10 +10,9 @@ D3 -> SDA
 D5 -> SCL
 */
 
-int inPin = D0; //Input pin
-
 int pin1 = D1;
 int pin2 = D2;
+int inPin = D3; //Input pin
 
 int onFlag = 0;
 
@@ -344,7 +343,7 @@ void handleRoot() {
 		"\t\t\t\t\t\tvar rateCell = row.insertCell(2);\n"
 		"\t\t\t\t\t\ttimeCell.innerHTML = new Date();\n"
 		"\t\t\t\t\t\trateCell.innerHTML = reading;\n"
-		"\t\t\t\t\t\tusageCell.innerHTML = reading/5;\n"
+		"\t\t\t\t\t\tusageCell.innerHTML = reading*5;\n"
 		"\t\t\t\t\t}\n"
 		"\t\t\t\t}\n"
 		"\t\t\t\txhttp.open(\"GET\", \"getReading\", true);\n"
@@ -355,7 +354,7 @@ void handleRoot() {
 		"\t\t\tfunction handleClick(cb) {\n"
 		"\t\t\t\tif(cb.checked) {\n"
 		"\t\t\t\t\tthis.path = cb.name + \"On\";\n"
-		"\t\t\t\t\tloadInterval = setInterval(updateVals, 1000)\n"
+		"\t\t\t\t\tloadInterval = setInterval(updateVals, 200)\n"
 		"\t\t\t\t}\n"
 		"\t\t\t\telse {\n"
 		"\t\t\t\t\tthis.path = cb.name + \"Off\";\n"
@@ -418,18 +417,20 @@ void setupWiFi(){
 	Serial.println("WiFi connected");
 }
 
-int calCurrent() {
+void calCurrent() {
 	if(!onFlag) {
-		return 0;
+		return;
 	}
 	int val = digitalRead(inPin);
-	if(val == HIGH) {
+	Serial.print("Pin is : ");
+	Serial.println(val);
+	if(val == LOW) {
 		blinkCount++;
 	}
 	Serial.print("Blink count: ");
 	Serial.print(blinkCount);
-	Serial.print("Reading: ");
-	Serial.print(reading);
+	Serial.print(" Reading: ");
+	Serial.println(reading);
 	if(blinkCount == 10) {
 		reading++;
 		blinkCount = 0;
@@ -470,7 +471,7 @@ void setup() {
 }
 
 void loop() {
-	reading += calCurrent();
+	calCurrent();
 	drawValue();
 	server.handleClient();
 }
