@@ -12,7 +12,7 @@ D5 -> SCL
 
 int pin1 = D1;
 int pin2 = D2;
-int inPin = D3; //Input pin
+int inPin = D0; //Input pin
 
 int onFlag = 0;
 
@@ -424,7 +424,7 @@ void calCurrent() {
 	int val = digitalRead(inPin);
 	Serial.print("Pin is : ");
 	Serial.println(val);
-	if(val == LOW) {
+	if(val == HIGH) {
 		blinkCount++;
 	}
 	Serial.print("Blink count: ");
